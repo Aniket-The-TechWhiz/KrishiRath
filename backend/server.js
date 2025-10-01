@@ -20,7 +20,7 @@ app.use(cors());
 connectDB();
 
 // Use the routes for the API
-app.use('/api', farmerDataRoutes);
+app.use('/', farmerDataRoutes);
 app.use('/api/auth', authRoutes); 
 
 app.get("/api/protected", auth, (req, res) => {
