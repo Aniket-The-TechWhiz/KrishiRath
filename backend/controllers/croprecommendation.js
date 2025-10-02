@@ -1,19 +1,20 @@
 const { createFarmerData, getFarmerData } = require('../model/croprecommendation');
-const ort = require('onnxruntime-web');
+const ort = require('onnxruntime-node');
 
-let session = null;
+// let session = null;
 
-// Load model once when the server starts
+let session;
+
 (async () => {
   try {
-    session = await ort.InferenceSession.create("./model.onnx", {
-      executionProviders: ["wasm"] // use wasm backend in Node
-    });
+    session = await ort.InferenceSession.create("./model.onnx"); // path to your model
     console.log("✅ ONNX model loaded successfully");
   } catch (err) {
-    console.error("❌ Failed to load ONNX model:", err);
-  }
+    console.error("❌ Failed to load model:", err);
+  }
 })();
+
+
 
 const predict = async (req, res) => {
   try {
@@ -36,6 +37,11 @@ const predict = async (req, res) => {
       Float32Array.from(features),
       [1, features.length]
     );
+
+
+    console.log("Model input names:", session.inputNames);
+console.log("Model input types:", session.inputTypes);
+
 
     const feeds = {};
     feeds[session.inputNames[0]] = inputTensor;
