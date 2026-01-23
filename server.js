@@ -7,7 +7,8 @@ const connectDB = require("./config/dbconnection");
 // Route Imports
 const authRoutes = require("./routes/authRoutes");
 const diaryRoutes = require("./routes/diaryRoutes");
-const postRoutes = require("./routes/postRoutes"); // Only declare this once
+const postRoutes = require("./routes/postRoutes"); 
+const schemeRoutes = require("./routes/schemeRoutes");
 
 const app = express();
 
@@ -24,7 +25,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/diary", diaryRoutes);
-app.use("/api/posts", postRoutes); // Only use this once
+app.use("/api/posts", postRoutes); 
+app.use("/api/schemes", schemeRoutes);
 
 // Test Protected Route
 const auth = require("./middleware/authMiddleware");
