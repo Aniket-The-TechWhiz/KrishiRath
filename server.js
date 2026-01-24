@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const diaryRoutes = require("./routes/diaryRoutes");
 const postRoutes = require("./routes/postRoutes"); 
 const schemeRoutes = require("./routes/schemeRoutes");
+const savedPostRoutes = require("./routes/savedPostRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/diary", diaryRoutes);
 app.use("/api/posts", postRoutes); 
 app.use("/api/schemes", schemeRoutes);
+app.use("/api/saved-posts", savedPostRoutes);
 
 // Test Protected Route
 const auth = require("./middleware/authMiddleware");
