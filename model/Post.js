@@ -6,6 +6,16 @@ const postSchema = new mongoose.Schema({
     ref: "User",
     required: true
   },
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  category: {
+    type: String,
+    required: true,
+    trim: true
+  },
   mediaUrl: { 
     type: String, 
     required: true 
