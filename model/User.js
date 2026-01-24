@@ -7,10 +7,13 @@ const userSchema = new mongoose.Schema({
   username: { type: String, default: "" },
   phoneNumber: { type: String, default: "" },
   primaryLanguage: { type: String, default: "English" },
-  farmSize: { type: String, default: "" }, // e.g., "5 Acres"
-  experience: { type: String, default: "" }, // e.g., "10 Years"
+  farmSize: { type: String, default: "" }, 
+  experience: { type: String, default: "" }, 
   cityVillage: { type: String, default: "" },
-  memberSince: { type: Date, default: Date.now } // Set by system
+  // New Location Fields
+  latitude: { type: Number, default: null },
+  longitude: { type: Number, default: null },
+  memberSince: { type: Date, default: Date.now } 
 });
 
 module.exports = mongoose.model("User", userSchema);

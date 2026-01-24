@@ -58,10 +58,21 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+// ... existing register and login logic ...
+
 // UPDATE PROFILE
 exports.updateProfile = async (req, res) => {
   try {
-    const { username, phoneNumber, primaryLanguage, farmSize, experience, cityVillage } = req.body;
+    const { 
+      username, 
+      phoneNumber, 
+      primaryLanguage, 
+      farmSize, 
+      experience, 
+      cityVillage,
+      latitude, // New field
+      longitude // New field
+    } = req.body;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
@@ -72,7 +83,9 @@ exports.updateProfile = async (req, res) => {
           primaryLanguage, 
           farmSize, 
           experience, 
-          cityVillage 
+          cityVillage,
+          latitude,
+          longitude
         } 
       },
       { new: true, runValidators: true }
