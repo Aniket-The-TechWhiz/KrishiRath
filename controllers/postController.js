@@ -1,86 +1,141 @@
 const Post = require("../model/Post");
 
-// Create a new post with Title and Category
+// ===============================
+// CREATE POST (Auth + Upload)
+// ===============================
 exports.createPost = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No media file uploaded" });
-    }
-
     const { title, category, description } = req.body;
 
-    // Validation for new fields
     if (!title || !category) {
-      return res.status(400).json({ error: "Title and Category are required" });
+      return res.status(400).json({
+        error: "Title and Category are required",
+      });
     }
 
+    if (!req.file) {
+      return res.status(400).json({
+        error: "Media file is required",
+      });
+    }
+
+    const mediaType = req.file.mimetype.startsWith("video")
+      ? "video"
+      : "image";
+
     const newPost = new Post({
-      userId: req.user.id, // Comes from authMiddleware
+      userId: req.user.id,
       title,
       category,
+      description: description || "",
       mediaUrl: `/uploads/${req.file.filename}`,
-      mediaType: req.file.mimetype.startsWith("video") ? "video" : "image",
-      description
+      mediaType,
     });
 
     await newPost.save();
-    res.status(201).json({ message: "Post created successfully!", post: newPost });
+
+    const populatedPost = await newPost.populate(
+      "userId",
+      "username email"
+    );
+
+    res.status(201).json({
+      message: "Post created successfully",
+      post: populatedPost,
+    });
   } catch (err) {
+    console.error("❌ Create Post Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// Get all posts for the feed
+// ===============================
+// GET ALL POSTS (PUBLIC FEED)
+// ===============================
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
       .populate("userId", "username email")
-      .populate("comments.userId", "username") // Populate usernames in comments too
+      .populate("comments.userId", "username")
       .sort({ createdAt: -1 });
+
     res.json(posts);
   } catch (err) {
+    console.error("❌ Get Posts Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// Like or Unlike a post
+// ===============================
+// LIKE / UNLIKE POST
+// ===============================
 exports.likePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: "Post not found" });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
 
     const userId = req.user.id;
 
-    if (!post.likes.includes(userId)) {
-      // Like
+    const index = post.likes.findIndex(
+      (id) => id.toString() === userId
+    );
+
+    if (index === -1) {
       post.likes.push(userId);
-      await post.save();
-      res.json({ message: "Post liked", likesCount: post.likes.length });
     } else {
-      // Unlike
-      post.likes = post.likes.filter((id) => id.toString() !== userId);
-      await post.save();
-      res.json({ message: "Post unliked", likesCount: post.likes.length });
+      post.likes.splice(index, 1);
     }
+
+    await post.save();
+
+    res.json({
+      message: index === -1 ? "Post liked" : "Post unliked",
+      likesCount: post.likes.length,
+    });
   } catch (err) {
+    console.error("❌ Like Post Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// Add a comment to a post
+// ===============================
+// ADD COMMENT
+// ===============================
 exports.addComment = async (req, res) => {
   try {
     const { text } = req.body;
-    if (!text) return res.status(400).json({ error: "Comment text is required" });
+
+    if (!text || !text.trim()) {
+      return res.status(400).json({
+        error: "Comment text is required",
+      });
+    }
 
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: "Post not found" });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
 
-    post.comments.push({ userId: req.user.id, text });
+    post.comments.push({
+      userId: req.user.id,
+      text: text.trim(),
+    });
+
     await post.save();
-    
-    res.json({ message: "Comment added", post });
+
+    const updatedPost = await post.populate(
+      "comments.userId",
+      "username"
+    );
+
+    res.json({
+      message: "Comment added successfully",
+      post: updatedPost,
+    });
   } catch (err) {
+    console.error("❌ Add Comment Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
