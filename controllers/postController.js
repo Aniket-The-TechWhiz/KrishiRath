@@ -1,11 +1,19 @@
 const Post = require("../model/Post");
 
-// ===============================
-// CREATE POST (Auth + Upload)
-// ===============================
 exports.createPost = async (req, res) => {
   try {
+    console.log('📥 Create Post Request');
+    console.log('   User ID:', req.user?.id);
+    console.log('   Body:', req.body);
+    console.log('   File:', req.file);
+   
     const { title, category, description } = req.body;
+
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        error: "User not authenticated - req.user.id is missing",
+      });
+    }
 
     if (!title || !category) {
       return res.status(400).json({
@@ -45,10 +53,11 @@ exports.createPost = async (req, res) => {
     });
   } catch (err) {
     console.error("❌ Create Post Error:", err);
+    console.error("   Error message:", err.message);
+    console.error("   Error stack:", err.stack);
     res.status(500).json({ error: err.message });
   }
 };
-
 // ===============================
 // GET ALL POSTS (PUBLIC FEED)
 // ===============================
