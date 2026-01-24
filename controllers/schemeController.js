@@ -1,15 +1,27 @@
 const Scheme = require("../model/Scheme");
 
-// POST a new scheme (Admin/Backend action)
+// POST a new scheme
 exports.createScheme = async (req, res) => {
   try {
-    const { title, description, scholarshipAmount, deadlineDate, helplineNumber } = req.body;
+    const { 
+      name, 
+      description, 
+      provider, 
+      category, 
+      eligibility, 
+      benefits, 
+      deadline, 
+      helplineNumber 
+    } = req.body;
 
     const newScheme = new Scheme({
-      title,
+      name,
       description,
-      scholarshipAmount,
-      deadlineDate,
+      provider,
+      category,
+      eligibility,
+      benefits,
+      deadline,
       helplineNumber
     });
 
@@ -20,7 +32,7 @@ exports.createScheme = async (req, res) => {
   }
 };
 
-// GET all schemes (Publicly visible to users)
+// GET all schemes
 exports.getAllSchemes = async (req, res) => {
   try {
     const schemes = await Scheme.find().sort({ createdAt: -1 });

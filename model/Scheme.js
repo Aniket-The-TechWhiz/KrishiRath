@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const schemeSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
     trim: true
@@ -10,17 +10,29 @@ const schemeSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  scholarshipAmount: {
-    type: String, // String to allow formats like "₹50,000" or "100% subsidy"
+  provider: {
+    type: String,
     required: true
   },
-  deadlineDate: {
+  category: {
+    type: String,
+    required: true
+  },
+  eligibility: {
+    type: [String], // Array of strings to store multiple criteria
+    required: true
+  },
+  benefits: {
+    type: [String], // Array of strings to store multiple benefit points
+    required: true
+  },
+  deadline: {
     type: Date,
     required: true
   },
   helplineNumber: {
     type: String,
-    required: true
+    required: false // Optional field
   },
   createdAt: {
     type: Date,
