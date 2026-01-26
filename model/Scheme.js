@@ -19,11 +19,11 @@ const schemeSchema = new mongoose.Schema({
     required: true
   },
   eligibility: {
-    type: [String], // Array of strings to store multiple criteria
+    type: [String], 
     required: true
   },
   benefits: {
-    type: [String], // Array of strings to store multiple benefit points
+    type: [String], 
     required: true
   },
   deadline: {
@@ -32,7 +32,7 @@ const schemeSchema = new mongoose.Schema({
   },
   helplineNumber: {
     type: String,
-    required: false // Optional field
+    required: false 
   },
   createdAt: {
     type: Date,

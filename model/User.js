@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema({
   farmSize: { type: String, default: "" }, 
   experience: { type: String, default: "" }, 
   cityVillage: { type: String, default: "" },
-  // New Location Fields
   latitude: { type: Number, default: null },
   longitude: { type: Number, default: null },
   memberSince: { type: Date, default: Date.now } 

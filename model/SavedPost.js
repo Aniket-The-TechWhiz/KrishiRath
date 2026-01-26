@@ -17,7 +17,7 @@ const savedPostSchema = new mongoose.Schema({
   }
 });
 
-// Prevent duplicate saves: A user can only save a specific post once
+
 savedPostSchema.index({ userId: 1, postId: 1 }, { unique: true });
 
 module.exports = mongoose.model("SavedPost", savedPostSchema);

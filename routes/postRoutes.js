@@ -11,9 +11,7 @@ const {
 const auth = require("../middleware/authMiddleware");
 const upload = require("../middleware/uploadMiddleware");
 
-// ===============================
 // CREATE POST (Auth + Media)
-// ===============================
 router.post(
     "/create",
     auth,
@@ -21,19 +19,13 @@ router.post(
     createPost
 );
 
-// ===============================
 // GET FEED (Public)
-// ===============================
 router.get("/feed", getAllPosts);
 
-// ===============================
 // LIKE / UNLIKE POST
-// ===============================
 router.put("/like/:id", auth, likePost);
 
-// ===============================
 // COMMENT ON POST
-// ===============================
 router.post("/comment/:id", auth, addComment);
 
 module.exports = router;

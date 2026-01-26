@@ -8,7 +8,7 @@ const diarySchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: true, // e.g., "Wheat Cultivation Plan - Spring 2026"
+    required: true, 
   },
   activities: [
     {
